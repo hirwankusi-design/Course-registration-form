@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registry</title>
+    <style>
+        /* Global Styles & Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        header {
+            background-color: #ffffff;
+            padding: 15px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6366f1;
+            cursor: pointer;
+        }
+        nav a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        nav a:hover, nav a.active {
+            color: #6366f1;
+        }
+
+        /* SPA Views Management */
+        .page-view {
+            display: block; /* Shown by default */
+        }
+        .hidden {
+            display: none !important; /* Forces layout tracking to hide elements */
+        }
+
+        /* Hero Section with Cool Gradient */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            color: white;
+            padding: 180px 10% 120px 10%;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 46px;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.85;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* The Gradient Start Button */
+        .gradient-start-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #a855f7, #6366f1, #3b82f6);
+            background-size: 200% auto;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .gradient-start-btn:hover {
+            background-position: right center;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 10%;
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+            background-color: #ffffff;
+        }
+        .feature-card {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: #6366f1;
+            font-size: 20px;
+        }
+
+        /* Registration Form Layout Container */
+        .registration-container {
+            padding-top: 140px;
+            padding-bottom: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 56px);
+        }
+        .form-card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 450px;
+        }
+        .form-card h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 26px;
+            border-bottom: 3px solid #6366f1;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: #6366f1;
+            outline: none;
+        }
+        
+        /* Dynamic Output Notification Box */
+        .dynamic-output {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e9ecef;
+            border-left: 5px solid #6366f1;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #495057;
+            display: none;
+        }
+        
+        /* Interactive Functional Form Success Box */
+        .success-alert {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background-color: #4f46e5;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" id="logoHome">Course Registry</div>
+        <nav>
+            <a id="navHome" class="active">Home</a>
+            <a id="navRegister">Register Platform</a>
+        </nav>
+    </header>
+
+    <div id="landingView" class="page-view">
+        <section class="hero">
+            <h1>Welcome to Your Next Academic Step</h1>
+            <p>Easily select your subjects, view your designated instructors, and manage your course load through our dynamic student registry system.</p>
+            <button id="startBtn" class="gradient-start-btn">Start Registration</button>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>Dynamic Matching</h3>
+                <p>Instantly tracks and confirms your chosen subject fields in real-time.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Expert Faculty</h3>
+                <p>Connect immediately with certified instructors matched to your topics.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Streamlined Setup</h3>
+                <p>No messy paperwork. Fill, confirm, and register your schedule in seconds.</p>
+            </div>
+        </section>
+    </div>
+
+    <div id="registrationView" class="page-view hidden">
+        <main class="registration-container">
+            <div class="form-card">
+                <h2>Course Registration</h2>
+                <form id="registrationForm">
+                    
+                    <div class="form-group">
+                        <label for="instructorName">Instructor Name</label>
+                        <input type="text" id="instructorName" placeholder="Enter instructor's name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subjectDropdown">Select Subject</label>
+                        <select id="subjectDropdown" required>
+                            <option value="" disabled selected>-- Choose a Subject --</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Python">Python</option>
+                            <option value="Game in Vue">Game in Vue</option>
+                            <option value="Java Script">Java Script</option>
+                            <option value="C++ programming">C++ programming</option>
+                        </select>
+                    </div>
+
+                    <div id="dynamicMessage" class="dynamic-output"></div>
+
+                    <div id="successAlert" class="success-alert"></div>
+
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        &copy; 2026 Course Registry System. All rights reserved.
+    </footer>
+
+    <script>
+        // DOM Elements Configuration
+        const landingView = document.getElementById('landingView');
+        const registrationView = document.getElementById('registrationView');
+        
+        const navHome = document.getElementById('navHome');
+        const navRegister = document.getElementById('navRegister');
+        const logoHome = document.getElementById('logoHome');
+        const startBtn = document.getElementById('startBtn');
+        
+        const registrationForm = document.getElementById('registrationForm');
+        const subjectDropdown = document.getElementById('subjectDropdown');
+        const dynamicMessage = document.getElementById('dynamicMessage');
+        const successAlert = document.getElementById('successAlert');
+
+        // --- PART 1: ROUTING ENGINE (Switching Views) ---
+        function showLandingPage() {
+            landingView.classList.remove('hidden');
+            registrationView.classList.add('hidden');
+            navHome.classList.add('active');
+            navRegister.classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showRegistrationPage() {
+            landingView.classList.add('hidden');
+            registrationView.classList.remove('hidden');
+            navRegister.classList.add('active');
+            navHome.classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Action Trigger Listeners
+        navHome.addEventListener('click', showLandingPage);
+        logoHome.addEventListener('click', showLandingPage);
+        navRegister.addEventListener('click', showRegistrationPage);
+        startBtn.addEventListener('click', showRegistrationPage);
+
+        // --- PART 2: DYNAMIC FORM FUNCTIONALITY ---
+        
+        // Track select options selection updates
+        subjectDropdown.addEventListener('change', function() {
+            const selectedSubject = this.value;
+            if (selectedSubject) {
+                dynamicMessage.textContent = `You selected: ${selectedSubject}`;
+                dynamicMessage.style.display = 'block';
+            } else {
+                dynamicMessage.style.display = 'none';
+            }
+        });
+
+        // Form processing configuration on Submission
+        registrationForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Lock browser reload actions
+
+            const instructor = document.getElementById('instructorName').value;
+            const subject = subjectDropdown.value;
+
+            // Trigger functional validation feedback update
+            successAlert.textContent = `🎉 Success! Registered for ${subject} under Instructor ${instructor}.`;
+            successAlert.style.display = 'block';
+
+            // Clean up states and cycle context back smoothly after completion
+            setTimeout(() => {
+                registrationForm.reset();
+                dynamicMessage.style.display = 'none';
+                successAlert.style.display = 'none';
+                showLandingPage(); // Automatically sends student back to home view!
+            }, 3500);
+        });
+    </script>
+</body>
+</html>
